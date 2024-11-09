@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# Help
+function display_help()
+{
+	echo "Usage: $0 [create|delete] [toolbox] [program]"
+	echo "  create: create .desktop file for the toolbox program"
+	echo "  delete: delete .desktop file for the toolbox program"
+	echo "  toolbox: toolbox name"
+	echo "  program: program name"
+	exit 1
+}
+
+# Check if not in toolbox
+if [ "$HOSTNAME" = "toolbx" ]
+then
+	echo "Do not run this program inside the toolbox !"
+	exit 2
+fi
+
+# Check args 
+if [ "$#" -lt 3 ]
+then
+	display_help
+fi
+
+# Vars
+ACTION=$1
+TOOLBOX=$2
+PROGRAM=$3
+DESKTOP_FILE="$HOME/.local/share/applications/${TOOLBOX}-${PROGRAM}.desktop"
+
+# Check if toolbox exists
+if ! toolbox list | grep -q "$TOOLBOX"
+then
+	echo "Error: Toolbox '$TOOLBOX' doesn't exist."
+	exit 3
+fi
+
+# Check proram and get ful path
+PROGRAM_PATH=$(toolbox run --container "$TOOLBOX" which "$PROGRAM" 2>/dev/null)
+
+if [ -z "$PROGRAM_PATH" ]
+then
+	echo "Error: Program '$PROGRAM' doesn't exist in '$TOOLBOX' toolbox."
+	exit 4
+fi
+
+# Function for desktop generation
+function create_desktop() {
+	echo "[Desktop Entry]" > "$DESKTOP_FILE"
+	echo "Version=1.0" >> "$DESKTOP_FILE"
+	echo "Type=Application" >> "$DESKTOP_FILE"
+	echo "Name=$PROGRAM" >> "$DESKTOP_FILE"
+	echo "Exec=toolbox run --container $TOOLBOX \"$PROGRAM_PATH\"" >> "$DESKTOP_FILE"
+	echo "Icon=" >> "$DESKTOP_FILE"  # TODO
+	echo "Terminal=false" >> "$DESKTOP_FILE"
+	echo "Categories=Utility;" >> "$DESKTOP_FILE"
+	chmod +x "$DESKTOP_FILE"
+	echo ".desktop file created : $DESKTOP_FILE"
+}
+
+# Fonction for delete the desktop file
+function delete_desktop() {
+	# Find existing desktop
+	local found_file=$(grep -rl "Exec=toolbox run --container $TOOLBOX \"$PROGRAM_PATH\"" "$HOME/.local/share/applications/"*.desktop 2>/dev/null)
+	
+	if [ -n "$found_file" ]
+	then
+        	rm "$found_file"
+		echo ".desktop file deleted: $found_file"
+	else
+		echo "Error: no .desktop found for '$PROGRAM' in '$TOOLBOX' toolbox."
+	fi
+}
+
+# Main
+case $ACTION in
+    create)
+        create_desktop
+        ;;
+    delete)
+        delete_desktop
+        ;;
+    *)
+        display_help
+        ;;
+esac
+
