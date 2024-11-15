@@ -1,4 +1,4 @@
-TARGET = toolbox-icon
+TARGET = Toolbox-icon
 INSTALL_DIR = /usr/bin
 
 install:
