@@ -1,17 +1,16 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
-# Help
-function display_help()
+function f_help()
 {
-	echo "Usage: $0 [create|delete] [toolbox] [program]"
-	echo "  create: create .desktop file for the toolbox program"
-	echo "  delete: delete .desktop file for the toolbox program"
-	echo "  toolbox: toolbox name"
-	echo "  program: program name"
+	echo "Usage: $0 [-c|-d] -t toolbox -p program"
+	echo "Options :"
+	echo "  -c		create .desktop file for the toolbox program"
+	echo "  -d		delete .desktop file for the toolbox program"
+	echo "  -t toolbox	toolbox name"
+	echo "  -p program	program name"
 	exit 1
 }
 
-# Check if not in toolbox
 if [ "$HOSTNAME" = "toolbx" ]
 then
 	echo "Do not run this program inside the toolbox !"
@@ -21,13 +20,76 @@ fi
 # Check args 
 if [ "$#" -lt 3 ]
 then
-	display_help
+	f_help
 fi
 
+option_c=false
+option_d=false
+option_p=false
+option_t=false
+val_t=""
+val_p=""
+
+while getopts ":cdt:p:h" option; do
+	case $option in
+		c)
+			option_c=true
+			;;
+		d)
+			option_d=true
+			;;
+		t)
+			option_t=true
+			val_t=$OPTARG
+			;;
+		p)
+			option_p=true
+			val_p=$OPTARG
+		;;
+		h)
+			f_help
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			f_help
+			exit 1
+			;;
+		:)
+			echo "-$OPTARG needs value" >&2
+			f_help
+			exit 1
+			;;
+		esac
+done
+
+
+if [[ $option_c == true && $option_d == true ]]
+then
+	echo "Use -c OR -d, not both."
+	exit 1
+elif [[ $option_c == false && $option_d == false ]]
+then
+	echo "You need to use -c OR -d."
+	exit 1
+fi
+
+if [[ -z $val_t ]]
+then
+	echo "You need to specify a toolbox name."
+	exit 1
+fi
+
+if [[ -z $val_p ]]
+then
+	echo "You need to specify a program command."
+	exit 1
+fi
+
+
 # Vars
-ACTION=$1
-TOOLBOX=$2
-PROGRAM=$3
+TOOLBOX=$val_t
+PROGRAM=$val_p
 DESKTOP_FILE="$HOME/.local/share/applications/${TOOLBOX}-${PROGRAM}.desktop"
 
 # Check if toolbox exists
@@ -38,12 +100,19 @@ then
 fi
 
 # Check proram and get ful path
-PROGRAM_PATH=$(toolbox run --container "$TOOLBOX" which "$PROGRAM" 2>/dev/null)
+PROGRAM_PATH=$(toolbox run --container "$TOOLBOX" which "$PROGRAM" | tail -1 2>/dev/null)
 
 if [ -z "$PROGRAM_PATH" ]
 then
 	echo "Error: Program '$PROGRAM' doesn't exist in '$TOOLBOX' toolbox."
 	exit 4
+fi
+
+REGEX_PATH='^(/[^/ ]*)+/?$'
+if [[ ! "$PROGRAM_PATH" =~ $REGEX_PATH ]]
+then
+	echo "Error: Program path '$PROGRAM_PATH' isn't a valid path in $TOOLBOX."
+	exit 5
 fi
 
 # Function for desktop generation
@@ -74,16 +143,12 @@ function delete_desktop() {
 	fi
 }
 
-# Main
-case $ACTION in
-    create)
-        create_desktop
-        ;;
-    delete)
-        delete_desktop
-        ;;
-    *)
-        display_help
-        ;;
-esac
+
+if [[ $option_c == true ]]
+then
+	create_desktop
+elif [[ $option_d == true ]]
+then
+	delete_desktop
+fi
 
