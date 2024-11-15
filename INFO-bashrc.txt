@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+
+if [[ "$(grep -c toolbx /etc/hostname)" -eq 1 ]] ; then
+        PS1="\[\e[0;36m\][\t]\[\e[0;m\] \[\e[0;33m\]\u@\h\[\e[0;m\]: \[\e[1;35m\]\w\[\e[0;m\] \[\e[1;32m\] \\$\[\e[0;m\] "
+        echo -en "\033[36m  Toolbox OS : \033[0m"
+        grep PRETTY_NAME /etc/os-release | cut -d'"' -f2
+fi

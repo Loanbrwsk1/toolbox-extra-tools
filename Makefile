@@ -1,10 +1,9 @@
-TARGET = Toolbox-icon
-INSTALL_DIR = /usr/bin
-
 install:
-	install -m 755 $(TARGET) $(INSTALL_DIR)
+	install -m 755 Toolbox-creatextra /usr/bin
+	install -m 755 Toolbox-icon /usr/bin
 
 uninstall:
-	rm -f $(INSTALL_DIR)/$(TARGET)
+	rm -f /usr/bin/Toolbox-creatextra
+	rm -f /usr/bin/Toolbox-icon
 
 .PHONY:install uninstall
