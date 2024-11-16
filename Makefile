@@ -1,9 +1,9 @@
 install:
-	install -m 755 Toolbox-creatextra /usr/bin
-	install -m 755 Toolbox-icon /usr/bin
+	install -m 755 tet-create /usr/bin
+	install -m 755 tet-icon /usr/bin
 
 uninstall:
-	rm -f /usr/bin/Toolbox-creatextra
-	rm -f /usr/bin/Toolbox-icon
+	rm -f /usr/bin/tet-create
+	rm -f /usr/bin/tet-icon
 
 .PHONY:install uninstall
