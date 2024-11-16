@@ -1,4 +1,4 @@
-# toolbox-icon
+# toolbox-extra-tools
 
 Useful program to make some things on toolboxes.
 
