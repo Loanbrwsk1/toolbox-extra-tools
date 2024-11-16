@@ -21,8 +21,8 @@ Useful program to make some things on toolboxes.
 #Nothing to build
 
 %install
-install -p -D -m 755 tet-create %{buildroot}/%{_bindir}/tet-create
-install -p -D -m 755 tet-icon %{buildroot}/%{_bindir}/tet-icon
+install -p -D -m 755 bin/tet-create %{buildroot}/%{_bindir}/tet-create
+install -p -D -m 755 bin/tet-icon %{buildroot}/%{_bindir}/tet-icon
 
 %files
 %{_bindir}/tet-create
