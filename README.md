@@ -24,3 +24,37 @@ Options :
   -t toolbox	toolbox name
   -p program	program name
 ```
+
+## Installation
+
+### From the sources 
+
+Download the sources, extract them and :
+```
+make install
+```
+
+### From package manager
+
+Fedora : 
+```
+dnf copr enable adriend/fedora-apps
+```
+```
+dnf install toolbox-extra-tools
+```
+
+RHEL :
+```
+dnf copr enable adriend/el-apps
+```
+```
+dnf install toolbox-extra-tools
+```
+
+
+## Uninstall 
+
+```
+make uninstall
+```
