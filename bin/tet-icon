@@ -2,13 +2,19 @@
 
 function f_help()
 {
-	echo "Usage: $0 [-c|-d] -t toolbox -p program"
+	echo ""
+	echo "Usage:"
+	echo " $0 [-c|-d] -t toolbox -p program"
+	echo ""
+	echo "Tool to generate icons for programmes installed in toolbox."
+	echo ""
 	echo "Options :"
 	echo "  -c		create .desktop file for the toolbox program"
 	echo "  -d		delete .desktop file for the toolbox program"
+	echo "  -l		list installed icons"
 	echo "  -t toolbox	toolbox name"
 	echo "  -p program	program name"
-	exit 1
+	exit 0
 }
 
 if [ "$HOSTNAME" = "toolbx" ]
@@ -18,25 +24,29 @@ then
 fi
 
 # Check args 
-if [ "$#" -lt 3 ]
+if [ "$#" -lt 3 ] && [ "$1" != "-l" ]
 then
 	f_help
 fi
 
 option_c=false
 option_d=false
+option_l=false
 option_p=false
 option_t=false
 val_t=""
 val_p=""
 
-while getopts ":cdt:p:h" option; do
+while getopts ":cdlt:p:h" option; do
 	case $option in
 		c)
 			option_c=true
 			;;
 		d)
 			option_d=true
+			;;
+		l)
+			option_l=true
 			;;
 		t)
 			option_t=true
@@ -63,60 +73,61 @@ while getopts ":cdt:p:h" option; do
 		esac
 done
 
-
+# Check options combinaisons valdity
 if [[ $option_c == true && $option_d == true ]]
 then
 	echo "Use -c OR -d, not both."
 	exit 1
-elif [[ $option_c == false && $option_d == false ]]
-then
-	echo "You need to use -c OR -d."
-	exit 1
 fi
 
-if [[ -z $val_t ]]
+if [[ -z $val_t ]] && [[ $option_c == true || $option_d == true ]]
 then
 	echo "You need to specify a toolbox name."
 	exit 1
 fi
 
-if [[ -z $val_p ]]
+if [[ -z $val_p ]] && [[ $option_c == true || $option_d == true ]]
 then
 	echo "You need to specify a program command."
 	exit 1
 fi
 
 
-# Vars
-TOOLBOX=$val_t
-PROGRAM=$val_p
-DESKTOP_FILE="$HOME/.local/share/applications/${TOOLBOX}-${PROGRAM}.desktop"
-
-# Check if toolbox exists
-if ! toolbox list | grep -q "$TOOLBOX"
+if [[ $option_c == true || $option_d == true ]]
 then
-	echo "Error: Toolbox '$TOOLBOX' doesn't exist."
-	exit 3
-fi
+	# Vars
+	TOOLBOX=$val_t
+	PROGRAM=$val_p
+	DESKTOP_FILE="$HOME/.local/share/applications/${TOOLBOX}-${PROGRAM}.desktop"
 
-# Check proram and get ful path
-PROGRAM_PATH=$(toolbox run --container "$TOOLBOX" which "$PROGRAM" | tail -1 2>/dev/null)
+	# Check if toolbox exists
+	if ! toolbox list | grep -q "$TOOLBOX"
+	then
+		echo "Error: Toolbox '$TOOLBOX' doesn't exist."
+		exit 3
+	fi
 
-if [ -z "$PROGRAM_PATH" ]
-then
-	echo "Error: Program '$PROGRAM' doesn't exist in '$TOOLBOX' toolbox."
-	exit 4
-fi
+	# Check proram and get ful path
+	PROGRAM_PATH=$(toolbox run --container "$TOOLBOX" which "$PROGRAM" | tail -1 2>/dev/null)
 
-REGEX_PATH='^(/[^/ ]*)+/?$'
-if [[ ! "$PROGRAM_PATH" =~ $REGEX_PATH ]]
-then
-	echo "Error: Program path '$PROGRAM_PATH' isn't a valid path in $TOOLBOX."
-	exit 5
+	if [ -z "$PROGRAM_PATH" ]
+	then
+		echo "Error: Program '$PROGRAM' doesn't exist in '$TOOLBOX' toolbox."
+		exit 4
+	fi
+
+	# Regexp for valid path /xxx/xxx/xxx
+	REGEX_PATH='^(/[^/ ]*)+/?$'
+	if [[ ! "$PROGRAM_PATH" =~ $REGEX_PATH ]]
+	then
+		echo "Error: Program path '$PROGRAM_PATH' isn't a valid path in $TOOLBOX."
+		exit 5
+	fi
 fi
 
 # Function for desktop generation
-function create_desktop() {
+function create_desktop()
+{
 	echo "[Desktop Entry]" > "$DESKTOP_FILE"
 	echo "Version=1.0" >> "$DESKTOP_FILE"
 	echo "Type=Application" >> "$DESKTOP_FILE"
@@ -129,8 +140,9 @@ function create_desktop() {
 	echo ".desktop file created : $DESKTOP_FILE"
 }
 
-# Fonction for delete the desktop file
-function delete_desktop() {
+# Function for delete the desktop file
+function delete_desktop()
+{
 	# Find existing desktop
 	local found_file=$(grep -rl "Exec=toolbox run --container $TOOLBOX \"$PROGRAM_PATH\"" "$HOME/.local/share/applications/"*.desktop 2>/dev/null)
 	
@@ -143,6 +155,15 @@ function delete_desktop() {
 	fi
 }
 
+# Function for list desktop files
+function list_desktop()
+{
+	grep --color=none -r "toolbox run" ~/.local/share/applications/ \
+	| sed -e "s%$HOME%~%" \
+	| sed -e 's%Exec=toolbox run --container %\n\tToolbox : %' \
+	| sed -e 's%"%\n\tProgram : "%'
+}
+
 
 if [[ $option_c == true ]]
 then
@@ -150,5 +171,8 @@ then
 elif [[ $option_d == true ]]
 then
 	delete_desktop
+elif [[ $option_l == true ]]
+then
+	list_desktop
 fi
 

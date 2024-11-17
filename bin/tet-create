@@ -9,7 +9,12 @@ TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
 
 
 function f_help {
-	echo "Usage: $0 [-d] [-r] [-l] [-h] toolbox-name"
+	echo ""
+	echo "Usage:"
+	echo " $0 [-d] [-r] [-l] [-h] toolbox-name"
+	echo ""
+	echo "Tool to create toolbox for unsupported OS in toolbox project."
+	echo ""
 	echo "Options :"
 	echo "  -d		Distro"
 	echo "  -r		Release"

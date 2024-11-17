@@ -3,7 +3,7 @@ Version:	1.0.0
 Release:	1%{?dist}
 Summary:	Extra tools for toolbox
 
-License:	MIT
+License:	GPLv3
 URL:		https://github.com/aaaaadrien/toolbox-extra-tools
 Source0:	https://github.com/aaaaadrien/toolbox-extra-tools/archive/refs/tags/v%{version}.tar.gz
 
