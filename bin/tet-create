@@ -5,6 +5,7 @@ TOOLBOXALPINE="quay.io/toolbx-images/alpine-toolbox"
 TOOLBOXCENTOS="quay.io/toolbx-images/centos-toolbox"
 TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
+TOOLBOXGENTOO="docker.io/gentoo/stage3"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
 
 
@@ -25,12 +26,23 @@ function f_help {
 
 function f_list {
 	echo "Supported distros :"
-	echo "  - alma"
-	echo "  - alpine"
-	echo "  - centos"
-	echo "  - debian"
-	echo "  - fedora"
-	echo "  - opensuse"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "+   \033[1m distro \033[0m   +                \033[1m release version \033[0m               +             \033[1m infos \033[0m             +"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| alma         | 8 9 or latest                                  | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| alpine       | 3.19 3.20 edge or latest                       | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| centos       | stream8 stream9 or latest                      | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| debian       | 10 11 12 testing unstable or latest            | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| fedora       | 39 40 41 rawhide or latest                     | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| gentoo       | latest systemd                                 | via docker container            |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| opensuse     | tumbleweed                                     | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 }
 
 
@@ -91,6 +103,9 @@ then
 			;;
 		fedora)
 			toolbox create --image "$TOOLBOXFEDORA:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			;;
+		gentoo)
+			toolbox create --image "$TOOLBOXGENTOO:$TOOLBOXRELEASE" "$TOOLBOXNAME"
 			;;
 		opensuse)
 			toolbox create --image "$TOOLBOXOPENSUSE:$TOOLBOXRELEASE" "$TOOLBOXNAME"
