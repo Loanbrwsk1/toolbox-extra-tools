@@ -1,0 +1,145 @@
+#! /usr/bin/env bash
+
+function f_help()
+{
+	echo ""
+	echo "Usage:"
+	echo " $0 [-c|-d] -t toolbox"
+	echo ""
+	echo "Tool to generate launcher for toolbox."
+	echo ""
+	echo "Options :"
+	echo "  -c		create .desktop file for the toolbox"
+	echo "  -d		delete .desktop file for the toolbox"
+	echo "  -l		list installed icons"
+	echo "  -t toolbox	toolbox name"
+	exit 0
+}
+
+if [ "$HOSTNAME" = "toolbx" ]
+then
+	echo "Do not run this program inside the toolbox !"
+	exit 2
+fi
+
+# Check args 
+if [ "$#" -lt 2 ] && [ "$1" != "-l" ]
+then
+	f_help
+fi
+
+option_c=false
+option_d=false
+option_l=false
+option_t=false
+val_t=""
+
+while getopts ":cdlt:p:h" option; do
+	case $option in
+		c)
+			option_c=true
+			;;
+		d)
+			option_d=true
+			;;
+		l)
+			option_l=true
+			;;
+		t)
+			option_t=true
+			val_t=$OPTARG
+			;;
+		h)
+			f_help
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			f_help
+			exit 1
+			;;
+		:)
+			echo "-$OPTARG needs value" >&2
+			f_help
+			exit 1
+			;;
+		esac
+done
+
+# Check options combinaisons valdity
+if [[ $option_c == true && $option_d == true ]]
+then
+	echo "Use -c OR -d, not both."
+	exit 1
+fi
+
+if [[ -z $val_t ]] && [[ $option_c == true || $option_d == true ]]
+then
+	echo "You need to specify a toolbox name."
+	exit 1
+fi
+
+if [[ $option_c == true || $option_d == true ]]
+then
+	# Vars
+	TOOLBOX=$val_t
+	DESKTOP_FILE="$HOME/.local/share/applications/launcher-${TOOLBOX}.desktop"
+
+	# Check if toolbox exists
+	if ! toolbox list | grep -q "$TOOLBOX"
+	then
+		echo "Error: Toolbox '$TOOLBOX' doesn't exist."
+		exit 3
+	fi
+fi
+
+# Function for desktop generation
+function create_desktop()
+{
+	echo "[Desktop Entry]" > "$DESKTOP_FILE"
+	echo "Version=1.0" >> "$DESKTOP_FILE"
+	echo "Type=Application" >> "$DESKTOP_FILE"
+	echo "Name=$TOOLBOX" >> "$DESKTOP_FILE"
+	echo "Exec=toolbox enter $TOOLBOX " >> "$DESKTOP_FILE"
+	echo "Icon=/usr/share/toolbox-extra-tools/toolbox.svg" >> "$DESKTOP_FILE"
+	echo "Terminal=true" >> "$DESKTOP_FILE"
+	echo "Categories=Utility;" >> "$DESKTOP_FILE"
+	chmod +x "$DESKTOP_FILE"
+	echo ".desktop file created : $DESKTOP_FILE"
+}
+
+# Function for delete the desktop file
+function delete_desktop()
+{
+	# Find existing desktop
+	local found_file=$(grep -rl "Exec=toolbox enter $TOOLBOX" "$HOME/.local/share/applications/"*.desktop 2>/dev/null)
+	
+	if [ -n "$found_file" ]
+	then
+        	rm "$found_file"
+		echo ".desktop file deleted: $found_file"
+	else
+		echo "Error: no .desktop found for '$TOOLBOX'."
+	fi
+}
+
+# Function for list desktop files
+function list_desktop()
+{
+	grep --color=none -r "toolbox enter" ~/.local/share/applications/ \
+	| sed -e "s%$HOME%~%" \
+	| sed -e 's%Exec=toolbox enter %\n\tToolbox : %' 
+}
+
+
+if [[ $option_c == true ]]
+then
+	create_desktop
+elif [[ $option_d == true ]]
+then
+	delete_desktop
+elif [[ $option_l == true ]]
+then
+	list_desktop
+fi
+
