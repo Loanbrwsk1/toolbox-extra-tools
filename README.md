@@ -19,6 +19,27 @@ Options :
   toolbox-name	Name of your toolbox (instead of distro-toolbox-release)
 ```
 
+Supported distros :
+```
++--------------+------------------------------------------------+---------------------------------+
++    distro    +                 release version                +              infos              +
++--------------+------------------------------------------------+---------------------------------+
+| alma         | 8 9 or latest                                  | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| alpine       | 3.19 3.20 edge or latest                       | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| centos       | stream8 stream9 or latest                      | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| debian       | 10 11 12 testing unstable or latest            | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| fedora       | 39 40 41 rawhide or latest                     | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| gentoo       | latest systemd                                 | via docker container            |
++--------------+------------------------------------------------+---------------------------------+
+| opensuse     | tumbleweed                                     | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+```
+
 ### tet-icon
 ```
 Usage:
@@ -32,6 +53,20 @@ Options :
   -l		list installed icons
   -t toolbox	toolbox name
   -p program	program name
+```
+
+### tet-launcher
+```
+Usage:
+ tet-launcher [-c|-d] -t toolbox
+
+Tool to generate launcher for toolbox.
+
+Options :
+  -c            create .desktop file for the toolbox
+  -d            delete .desktop file for the toolbox
+  -l            list installed icons
+  -t toolbox    toolbox name
 ```
 
 ## Installation

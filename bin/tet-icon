@@ -131,9 +131,9 @@ function create_desktop()
 	echo "[Desktop Entry]" > "$DESKTOP_FILE"
 	echo "Version=1.0" >> "$DESKTOP_FILE"
 	echo "Type=Application" >> "$DESKTOP_FILE"
-	echo "Name=$PROGRAM" >> "$DESKTOP_FILE"
+	echo "Name=$PROGRAM (via $TOOLBOX)" >> "$DESKTOP_FILE"
 	echo "Exec=toolbox run --container $TOOLBOX \"$PROGRAM_PATH\"" >> "$DESKTOP_FILE"
-	echo "Icon=" >> "$DESKTOP_FILE"  # TODO
+	echo "Icon=/usr/share/toolbox-extra-tools/toolbox.svg" >> "$DESKTOP_FILE"
 	echo "Terminal=false" >> "$DESKTOP_FILE"
 	echo "Categories=Utility;" >> "$DESKTOP_FILE"
 	chmod +x "$DESKTOP_FILE"

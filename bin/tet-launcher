@@ -99,7 +99,7 @@ function create_desktop()
 	echo "[Desktop Entry]" > "$DESKTOP_FILE"
 	echo "Version=1.0" >> "$DESKTOP_FILE"
 	echo "Type=Application" >> "$DESKTOP_FILE"
-	echo "Name=$TOOLBOX" >> "$DESKTOP_FILE"
+	echo "Name=$TOOLBOX toolbx" >> "$DESKTOP_FILE"
 	echo "Exec=toolbox enter $TOOLBOX " >> "$DESKTOP_FILE"
 	echo "Icon=/usr/share/toolbox-extra-tools/toolbox.svg" >> "$DESKTOP_FILE"
 	echo "Terminal=true" >> "$DESKTOP_FILE"
