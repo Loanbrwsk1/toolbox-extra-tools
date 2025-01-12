@@ -7,6 +7,7 @@ TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
 TOOLBOXGENTOO="docker.io/gentoo/stage3"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
+TOOLBOXRHEL="registry.access.redhat.com"
 
 
 function f_help {
@@ -42,6 +43,8 @@ function f_list {
 	echo -e "| gentoo       | latest systemd                                 | via docker container            |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| opensuse     | tumbleweed                                     | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| rhel         | 8.10 9.3 9.4 ... (<major>.<minor>' format)     | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 }
 
@@ -109,6 +112,9 @@ then
 			;;
 		opensuse)
 			toolbox create --image "$TOOLBOXOPENSUSE:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			;;
+		rhel)
+			toolbox create --image "$TOOLBOXRHEL/ubi${TOOLBOXRELEASE%%.*}/toolbox:$TOOLBOXRELEASE" "$TOOLBOXNAME"
 			;;
 		*)
 			echo "Unknown distro : $TOOLBOXDISTRO"
