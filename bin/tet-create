@@ -2,12 +2,14 @@
 
 TOOLBOXALMA="quay.io/toolbx-images/almalinux-toolbox"
 TOOLBOXALPINE="quay.io/toolbx-images/alpine-toolbox"
+TOOLBOXARCH="quay.io/toolbx/arch-toolbox"
 TOOLBOXCENTOS="quay.io/toolbx-images/centos-toolbox"
 TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
 TOOLBOXGENTOO="docker.io/gentoo/stage3"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
 TOOLBOXRHEL="registry.access.redhat.com"
+TOOLBOXUBUNTU="quay.io/toolbx/ubuntu-toolbox"
 
 
 function f_help {
@@ -34,6 +36,8 @@ function f_list {
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| alpine       | 3.19 3.20 edge or latest                       | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| arch         | latest                                         | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| centos       | stream8 stream9 or latest                      | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| debian       | 10 11 12 testing unstable or latest            | official toolbox                |"
@@ -45,6 +49,8 @@ function f_list {
 	echo -e "| opensuse     | tumbleweed                                     | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| rhel         | 8.10 9.3 9.4 ... (<major>.<minor>' format)     | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| ubuntu       | 22.04 24.04 ... (YY.MM format)                 | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 }
 
@@ -98,6 +104,9 @@ then
 		alpine)
 			toolbox create --image "$TOOLBOXALPINE:$TOOLBOXRELEASE" "$TOOLBOXNAME"
 			;;
+		arch)
+			toolbox create --image "$TOOLBOXARCH:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			;;
 		centos)
 			toolbox create --image "$TOOLBOXCENTOS:$TOOLBOXRELEASE" "$TOOLBOXNAME"
 			;;
@@ -115,6 +124,9 @@ then
 			;;
 		rhel)
 			toolbox create --image "$TOOLBOXRHEL/ubi${TOOLBOXRELEASE%%.*}/toolbox:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			;;
+		ubuntu)
+			toolbox create --image "$TOOLBOXUBUNTU:$TOOLBOXRELEASE" "$TOOLBOXNAME"
 			;;
 		*)
 			echo "Unknown distro : $TOOLBOXDISTRO"
