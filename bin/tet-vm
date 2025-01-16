@@ -124,12 +124,17 @@ then
 	if [[ "$EUID" = 0 ]]
 	then
 		PODMANOPTS="--network=bridge"
+		if [[ $option_p == true ]]
+		then
+			PODMANPORTS=$(echo "$val_p" | sed -e 's/,/ -p /g')
+			PODMANOPTS="--network=bridge -p $PODMANPORTS "
+		fi
 	else
 		PODMANOPTS="--network=host"
 		if [[ $option_p == true ]]
 		then
-			PODMANPORTS=$(echo ",$val_p" | sed -e 's/,/ -p /g')
-			PODMANOPTS="--network=bridge $PODMANPORTS "
+			PODMANPORTS=$(echo "$val_p" | sed -e 's/,/ -p /g')
+			PODMANOPTS="--network=bridge -p $PODMANPORTS "
 		fi
 	fi
 
