@@ -202,11 +202,14 @@ then
 	TOOLBOXSTATUS=$(podman inspect --format '{{.State.Running}}' "$TOOLBOXNAME")
 	if [[ $TOOLBOXSTATUS != "true" ]]
 	then
-		podman start $TOOLBOXNAME
+		podman start $TOOLBOXNAME &> /dev/null
 	fi
 	podman exec -it $TOOLBOXNAME /bin/bash
 else
 	# Wrong subcommand
-	echo "Unknown subcommand $TOOLBOXSUBCOMMAND"
+	if [[ ! -z "$TOOLBOXSUBCOMMAND" ]]
+	then
+		echo "Unknown subcommand $TOOLBOXSUBCOMMAND"
+	fi
 	f_help
 fi
