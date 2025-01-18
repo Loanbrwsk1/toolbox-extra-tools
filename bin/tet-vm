@@ -4,7 +4,7 @@ TOOLBOXALMA="quay.io/toolbx-images/almalinux-toolbox"
 TOOLBOXALPINE="quay.io/toolbx-images/alpine-toolbox"
 TOOLBOXARCH="quay.io/toolbx/arch-toolbox"
 TOOLBOXCENTOS="quay.io/toolbx-images/centos-toolbox"
-TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
+#TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
 TOOLBOXGENTOO="docker.io/gentoo/stage3"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
@@ -50,8 +50,6 @@ function f_list {
 	echo -e "| arch         | latest                                         |"
 	echo -e "+--------------+------------------------------------------------+"
 	echo -e "| centos       | stream8 stream9 or latest                      |"
-	echo -e "+--------------+------------------------------------------------+"
-	echo -e "| debian       | SUPPORT COMMING SOON !!!                       |"
 	echo -e "+--------------+------------------------------------------------+"
 	echo -e "| fedora       | 39 40 41 rawhide or latest                     |"
 	echo -e "+--------------+------------------------------------------------+"
@@ -155,9 +153,6 @@ then
 			centos)
 				podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "$TOOLBOXCENTOS:$TOOLBOXRELEASE" /sbin/init
 				;;
-			#debian)
-			#	podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "$TOOLBOXDEBIAN:$TOOLBOXRELEASE" /sbin/init
-			#	;;
 			fedora)
 				podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "$TOOLBOXFEDORA:$TOOLBOXRELEASE" /sbin/init
 				;;
