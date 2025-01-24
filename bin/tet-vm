@@ -4,7 +4,7 @@ TOOLBOXALMA="quay.io/toolbx-images/almalinux-toolbox"
 TOOLBOXALPINE="quay.io/toolbx-images/alpine-toolbox"
 TOOLBOXARCH="quay.io/toolbx/arch-toolbox"
 TOOLBOXCENTOS="quay.io/toolbx-images/centos-toolbox"
-#TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
+TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
 TOOLBOXGENTOO="docker.io/gentoo/stage3"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
@@ -50,6 +50,8 @@ function f_list {
 	echo -e "| arch         | latest                                         |"
 	echo -e "+--------------+------------------------------------------------+"
 	echo -e "| centos       | stream8 stream9 or latest                      |"
+	echo -e "+--------------+------------------------------------------------+"
+	echo -e "| debian       | 10 11 12 testing unstable or latest            |"
 	echo -e "+--------------+------------------------------------------------+"
 	echo -e "| fedora       | 39 40 41 rawhide or latest                     |"
 	echo -e "+--------------+------------------------------------------------+"
@@ -152,6 +154,25 @@ then
 				;;
 			centos)
 				podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "$TOOLBOXCENTOS:$TOOLBOXRELEASE" /sbin/init
+				;;
+			debian)
+				# EXPERIMENTAL, NEED CLEANING CODE
+				# MAKE LOCALLY A DEBIAN IMAGE WITH SYSTEMD SUPPORT
+				if ! podman images --format "{{.Repository}}:{{.Tag}}" | grep -q "localhost/tet-$TOOLBOXDISTRO-$TOOLBOXRELEASE"
+				then
+					echo -n "Generating a Debian image including systemd... Please wait "
+					podman run -d --name tet_tmp_deb "$TOOLBOXDEBIAN:$TOOLBOXRELEASE" bash -c "apt-get update && apt-get install -y systemd init" &> /dev/null
+					while [[ $(podman inspect --format '{{.State.Running}}' tet_tmp_deb) = "true" ]]
+					do
+						sleep 1
+						echo -n "."
+					done	
+					podman commit tet_tmp_deb "tet-$TOOLBOXDISTRO-$TOOLBOXRELEASE" &> /dev/null
+					podman stop tet_tmp_deb &> /dev/null
+					podman rm tet_tmp_deb &> /dev/null
+					echo ""
+				fi
+				podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "tet-$TOOLBOXDISTRO-$TOOLBOXRELEASE" /sbin/init
 				;;
 			fedora)
 				podman create $PODMANOPTS --name "$TOOLBOXNAME" --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro "$TOOLBOXFEDORA:$TOOLBOXRELEASE" /sbin/init
