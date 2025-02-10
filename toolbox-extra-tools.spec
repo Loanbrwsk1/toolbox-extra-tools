@@ -33,6 +33,8 @@ install -p -D -m 644 share/toolbox-extra-tools/toolbox.svg %{buildroot}/%{_datad
 %{_datadir}/%{name}/toolbox.svg
 
 %changelog
+* Mon Feb 10 2025 Adrien.D <adriend@linuxtricks.lan> - 2.0.0-1.fc41
+- Update to 2.0.0 version
 * Mon Jan 13 2025 Adrien.D <adriend@linuxtricks.lan> - 1.2.0-1.fc41
 - Update to 1.2.0 version
 * Sat Nov 23 2024 Adrien.D <adriend@linuxtricks.lan> - 1.1.0-1.fc41
