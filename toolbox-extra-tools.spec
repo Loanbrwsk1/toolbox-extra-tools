@@ -24,12 +24,16 @@ Useful program to make some things on toolboxes.
 install -p -D -m 755 bin/tet-create %{buildroot}/%{_bindir}/tet-create
 install -p -D -m 755 bin/tet-icon %{buildroot}/%{_bindir}/tet-icon
 install -p -D -m 755 bin/tet-launcher %{buildroot}/%{_bindir}/tet-launcher
+install -p -D -m 755 bin/tet-vm %{buildroot}/%{_bindir}/tet-vm
 install -p -D -m 644 share/toolbox-extra-tools/toolbox.svg %{buildroot}/%{_datadir}/%{name}/toolbox.svg
+install -p -D -m 644 profile.d/toolbox-extra-tools.sh %{buildroot}/%{_sysconfdir}/profile.d/toolbox-extra-tools.sh
 
 %files
+%{_sysconfdir}/profile.d/toolbox-extra-tools.sh
 %{_bindir}/tet-create
 %{_bindir}/tet-icon
 %{_bindir}/tet-launcher
+%{_bindir}/tet-vm
 %{_datadir}/%{name}/toolbox.svg
 
 %changelog
