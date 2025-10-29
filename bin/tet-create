@@ -2,14 +2,18 @@
 
 TOOLBOXALMA="quay.io/toolbx-images/almalinux-toolbox"
 TOOLBOXALPINE="quay.io/toolbx-images/alpine-toolbox"
+TOOLBOXAMAZON="quay.io/toolbx-images/amazonlinux-toolbox"
 TOOLBOXARCH="quay.io/toolbx/arch-toolbox"
 TOOLBOXCENTOS="quay.io/toolbx-images/centos-toolbox"
 TOOLBOXDEBIAN="quay.io/toolbx-images/debian-toolbox"
 TOOLBOXFEDORA="quay.io/fedora/fedora-toolbox"
 TOOLBOXGENTOO="docker.io/gentoo/stage3"
+TOOLBOXMINT="docker.io/linuxmintd/mint21.1-amd64"
 TOOLBOXOPENSUSE="quay.io/toolbx-images/opensuse-toolbox"
 TOOLBOXRHEL="registry.access.redhat.com"
+TOOLBOXROCKY="quay.io/toolbx-images/rockylinux-toolbox"
 TOOLBOXUBUNTU="quay.io/toolbx/ubuntu-toolbox"
+TOOLBOXWOLFI="quay.io/toolbx-images/wolfi-toolbox"
 
 
 function f_help {
@@ -36,6 +40,8 @@ function f_list {
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| alpine       | 3.19 3.20 edge or latest                       | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| amazon       | 2 2023 or latest                               | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| arch         | latest                                         | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| centos       | stream8 stream9 or latest                      | official toolbox                |"
@@ -46,12 +52,19 @@ function f_list {
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| gentoo       | latest systemd                                 | via docker container            |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| mint         | 21.1                                           | distrobox                       |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| opensuse     | tumbleweed                                     | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| rhel         | 8.10 9.3 9.4 ... (<major>.<minor>' format)     | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| rocky        | 8 9 or latest                                  | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
 	echo -e "| ubuntu       | 22.04 24.04 ... (YY.MM format)                 | official toolbox                |"
 	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+	echo -e "| wolfi        | latest                                         | official toolbox                |"
+	echo -e "+--------------+------------------------------------------------+---------------------------------+"
+
 }
 
 
@@ -99,34 +112,46 @@ then
 	TOOLBOXRELEASE=$val_r
 	case $TOOLBOXDISTRO in
 		alma)
-			toolbox create --image "$TOOLBOXALMA:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXALMA:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		alpine)
-			toolbox create --image "$TOOLBOXALPINE:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXALPINE:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
+			;;
+		amazon)
+			toolbox create --image "$TOOLBOXAMAZON:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		arch)
-			toolbox create --image "$TOOLBOXARCH:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXARCH:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		centos)
-			toolbox create --image "$TOOLBOXCENTOS:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXCENTOS:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		debian)
-			toolbox create --image "$TOOLBOXDEBIAN:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXDEBIAN:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		fedora)
-			toolbox create --image "$TOOLBOXFEDORA:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXFEDORA:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		gentoo)
-			toolbox create --image "$TOOLBOXGENTOO:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXGENTOO:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
+			;;
+		mint)
+			toolbox create --image "$TOOLBOXMINT" "$TOOLBOXNAME" -y
 			;;
 		opensuse)
-			toolbox create --image "$TOOLBOXOPENSUSE:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXOPENSUSE:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		rhel)
-			toolbox create --image "$TOOLBOXRHEL/ubi${TOOLBOXRELEASE%%.*}/toolbox:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXRHEL/ubi${TOOLBOXRELEASE%%.*}/toolbox:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
+			;;
+		rocky)
+			toolbox create --image "$TOOLBOXROCKY:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		ubuntu)
-			toolbox create --image "$TOOLBOXUBUNTU:$TOOLBOXRELEASE" "$TOOLBOXNAME"
+			toolbox create --image "$TOOLBOXUBUNTU:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
+			;;
+		wolfi)
+			toolbox create --image "$TOOLBOXWOLFI:$TOOLBOXRELEASE" "$TOOLBOXNAME" -y
 			;;
 		*)
 			echo "Unknown distro : $TOOLBOXDISTRO"

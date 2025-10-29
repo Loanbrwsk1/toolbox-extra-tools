@@ -28,7 +28,11 @@ Supported distros :
 +--------------+------------------------------------------------+---------------------------------+
 | alpine       | 3.19 3.20 edge or latest                       | official toolbox                |
 +--------------+------------------------------------------------+---------------------------------+
+| amazon       | 2 2023 or latest                               | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
 | arch         | latest                                         | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| blackarch    | latest                                         | via docker container            |
 +--------------+------------------------------------------------+---------------------------------+
 | centos       | stream8 stream9 or latest                      | official toolbox                |
 +--------------+------------------------------------------------+---------------------------------+
@@ -38,11 +42,17 @@ Supported distros :
 +--------------+------------------------------------------------+---------------------------------+
 | gentoo       | latest systemd                                 | via docker container            |
 +--------------+------------------------------------------------+---------------------------------+
+| mint         | 21.1                                           | distrobox                       |
++--------------+------------------------------------------------+---------------------------------+
 | opensuse     | tumbleweed                                     | official toolbox                |
 +--------------+------------------------------------------------+---------------------------------+
 | rhel         | 8.10 9.3 9.4 ... (<major>.<minor>' format)     | official toolbox                |
 +--------------+------------------------------------------------+---------------------------------+
+| rocky        | 8 9 or latest                                  | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
 | ubuntu       | 22.04 24.04 ... (YY.MM format)                 | official toolbox                |
++--------------+------------------------------------------------+---------------------------------+
+| wolfi        | latest                                         | official toolbox                |
 +--------------+------------------------------------------------+---------------------------------+
 ```
 
@@ -75,95 +85,17 @@ Options :
   -t toolbox    toolbox name
 ```
 
-### tet-vm (EXPERIMENTAL)
-```
-Usage:
- tet-vm subcommand [-d] [-r] [-l] [-h] cont-name
-
-Tool to create a podmain container you can use as a virtual machine.
-
-Options :
-  -d		Distro
-  -r		Release
-  -p		Port redirection (8080:80) or multiport redirection (8080:80,8443:443)
-  -l		List distros available
-  -h		Help
-  cont-name	Name of your container
-
-Note:
-Rootfull Mode (root) : 
-	- Container is in the podman default network. (Container has podman IP address)
-	- Full access to the container on all ports via container IP address from host.
-Rootless Mode (user) : 
-	- !! Container can't open <1024 ports !!
-	- Container is in host mode. Container has same IP than host. (Container has same IP than host)
-	- Container is in the podman default network if port redirection enabled. (Container has podman IP address)
-```
-
-Supported distros : 
-```
-+--------------+------------------------------------------------+
-+    distro    +                 release version                +
-+--------------+------------------------------------------------+
-| alma         | 8 9 or latest                                  |
-+--------------+------------------------------------------------+
-| alpine       | 3.19 3.20 edge or latest                       |
-+--------------+------------------------------------------------+
-| arch         | latest                                         |
-+--------------+------------------------------------------------+
-| centos       | stream8 stream9 or latest                      |
-+--------------+------------------------------------------------+
-| debian       | 10 11 12 testing unstable or latest            |
-+--------------+------------------------------------------------+
-| fedora       | 39 40 41 rawhide or latest                     |
-+--------------+------------------------------------------------+
-| gentoo       | latest systemd                                 |
-+--------------+------------------------------------------------+
-| opensuse     | tumbleweed                                     |
-+--------------+------------------------------------------------+
-| rhel         | 8.10 9.3 9.4 ... (<major>.<minor>' format)     |
-+--------------+------------------------------------------------+
-| ubuntu       | 22.04 24.04 ... (YY.MM format)                 |
-+--------------+------------------------------------------------+
-```
-
 ## Installation
 
-### From the sources 
+### From the sources
 
 Download the sources, extract them and :
 ```
 make install
 ```
 
-### From package manager
+## Uninstall
 
-Fedora (supported versions) : 
-```
-dnf copr enable adriend/fedora-apps
-```
-```
-dnf install toolbox-extra-tools
-```
-
-RHEL (8 9 10) and derivatives :
-```
-dnf copr enable adriend/el-apps
-```
-```
-dnf install toolbox-extra-tools
-```
-
-
-## Uninstall 
-
-If installed manually : 
 ```
 make uninstall
 ```
-
-If installed by package-manager : 
-```
-dnf remove toolbox-extra-tools
-```
-
